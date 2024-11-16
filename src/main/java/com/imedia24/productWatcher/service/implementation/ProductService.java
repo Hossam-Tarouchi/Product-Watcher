@@ -1,9 +1,9 @@
 package com.imedia24.productWatcher.service.implementation;
 
 import com.imedia24.productWatcher.dao.entity.ProductEntity;
+import com.imedia24.productWatcher.dao.model.Product;
 import com.imedia24.productWatcher.dao.repository.ProductRepository;
 import com.imedia24.productWatcher.service.interfaces.IProductService;
-import com.imedia24.productWatcher.dao.model.Product;
 import com.imedia24.productWatcher.util.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
