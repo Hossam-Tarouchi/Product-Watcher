@@ -6,6 +6,8 @@ import com.imedia24.productWatcher.dao.repository.PriceRepository;
 import com.imedia24.productWatcher.service.interfaces.IPriceService;
 import com.imedia24.productWatcher.util.mapper.PriceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PriceService implements IPriceService {
+
+    private final int PAGE_SIZE = 2;
 
     private final PriceRepository priceRepository;
     private final PriceMapper priceMapper;
@@ -25,8 +29,8 @@ public class PriceService implements IPriceService {
     }
 
     @Override
-    public List<Price> getPaginatedPrices() {
-        return priceRepository.findAll().stream()
+    public List<Price> getPaginatedPrices(int page) {
+        return priceRepository.findAll(PageRequest.of(page - 1, PAGE_SIZE, Sort.by("date"))).stream()
                 .map(priceMapper::toPrice)
                 .collect(Collectors.toCollection(ArrayList::new));
     }

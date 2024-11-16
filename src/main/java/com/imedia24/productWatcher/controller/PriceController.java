@@ -23,12 +23,20 @@ public class PriceController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomHttpResponse> getPaginatedPrices(){
+    public ResponseEntity<CustomHttpResponse> getPaginatedPrices(@RequestParam("page") int page){
+        if (page < 1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    CustomHttpResponse.builder()
+                            .success(false)
+                            .message(ResponseMessage.PRICE_PAGE_VALUE_NOT_ACCEPTABLE)
+                            .build()
+            );
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
                 CustomHttpResponse.builder()
                         .success(true)
                         .message(ResponseMessage.EMPTY_MESSAGE)
-                        .data(priceService.getPaginatedPrices())
+                        .data(priceService.getPaginatedPrices(page))
                         .build()
         );
     }
