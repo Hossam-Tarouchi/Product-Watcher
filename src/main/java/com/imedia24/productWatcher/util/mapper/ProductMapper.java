@@ -8,11 +8,6 @@ import org.springframework.stereotype.Component;
 public class ProductMapper {
 
     public ProductEntity toProductEntity(Product product) {
-        if (product.getSku() == null) {
-            return ProductEntity.builder()
-                    .name(product.getName())
-                    .build();
-        }
         return ProductEntity.builder()
                 .sku(product.getSku())
                 .name(product.getName())
