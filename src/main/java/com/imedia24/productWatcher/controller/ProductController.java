@@ -49,7 +49,7 @@ public class ProductController {
             if (createdProduct == null){
                 return ResponseEntity.status(HttpStatus.OK).body(
                         CustomHttpResponse.builder()
-                                .success(true)
+                                .success(false)
                                 .message(ResponseMessage.PRODUCT_CREATION_ERROR)
                                 .build()
                 );
