@@ -1,5 +1,6 @@
 package com.imedia24.productWatcher.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.Date;
 public class Price {
     private Long id;
     private float price;
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "Europe/Paris")  // Explicitly set timezone
     private Date date;
     private Long sku;
 }
