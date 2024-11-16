@@ -5,6 +5,8 @@ import com.imedia24.productWatcher.dao.model.Product;
 import com.imedia24.productWatcher.service.interfaces.IProductService;
 import com.imedia24.productWatcher.util.constant.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,21 +44,31 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<CustomHttpResponse> createProduct(@RequestBody Product product) {
-        Product createdProduct = productService.createProduct(product);
-        if (createdProduct == null){
-            return ResponseEntity.status(HttpStatus.OK).body(
+        try{
+            Product createdProduct = productService.createProduct(product);
+            if (createdProduct == null){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        CustomHttpResponse.builder()
+                                .success(true)
+                                .message(ResponseMessage.PRODUCT_CREATION_ERROR)
+                                .build()
+                );
+            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(
                     CustomHttpResponse.builder()
                             .success(true)
-                            .message(ResponseMessage.PRODUCT_CREATION_ERROR)
+                            .message(ResponseMessage.PRODUCT_CREATION_SUCCESS)
+                            .data(createdProduct)
+                            .build()
+            );
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    CustomHttpResponse.builder()
+                            .success(false)
+                            .message(e.getMessage())
                             .build()
             );
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                CustomHttpResponse.builder()
-                        .success(true)
-                        .message(ResponseMessage.PRODUCT_CREATION_SUCCESS)
-                        .data(createdProduct)
-                        .build()
-        );
+
     }
 }
