@@ -22,5 +22,7 @@ public class PriceEntity {
     @JsonFormat(pattern = "dd/MM/yyyy", timezone = "Europe/Paris")  // Explicitly set timezone
     private float price;
     private Date date;
-    private Long sku;
+    @ManyToOne
+    @JoinColumn(name = "sku")
+    private ProductEntity product;
 }

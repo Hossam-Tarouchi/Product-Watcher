@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/price")
 public class PriceController {
@@ -43,8 +41,8 @@ public class PriceController {
 
     @PostMapping
     public ResponseEntity<CustomHttpResponse> createPrice(@RequestBody Price price){
-        Price createdPrice = priceService.createPrice(price);
         try{
+            Price createdPrice = priceService.createPrice(price);
             if(createdPrice == null){
                 return ResponseEntity.status(HttpStatus.OK).body(
                         CustomHttpResponse.builder()
@@ -60,7 +58,7 @@ public class PriceController {
                             .data(createdPrice)
                             .build()
             );
-        }catch (Exception e){
+        } catch (Exception e){
             return ResponseEntity.status(HttpStatus.OK).body(
                     CustomHttpResponse.builder()
                             .success(false)

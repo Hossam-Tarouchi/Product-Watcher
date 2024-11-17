@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -12,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class Product {
     private Long sku;
     private String name;
+    private List<Price> prices;
 }
