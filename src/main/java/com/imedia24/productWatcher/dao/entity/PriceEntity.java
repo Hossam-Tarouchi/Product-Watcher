@@ -19,9 +19,12 @@ public class PriceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "Europe/Paris")  // Explicitly set timezone
+
     private float price;
+
+    @JsonFormat(pattern = "dd/MM/yyyy", timezone = "Europe/Paris")
     private Date date;
+
     @ManyToOne
     @JoinColumn(name = "sku")
     private ProductEntity product;

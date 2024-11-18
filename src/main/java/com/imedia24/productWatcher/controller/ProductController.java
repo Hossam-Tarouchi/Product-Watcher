@@ -4,15 +4,17 @@ import com.imedia24.productWatcher.dao.model.CustomHttpResponse;
 import com.imedia24.productWatcher.dao.model.Product;
 import com.imedia24.productWatcher.service.interfaces.IProductService;
 import com.imedia24.productWatcher.util.constant.ResponseMessage;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/product")
+@Validated
 public class ProductController {
 
     private final IProductService productService;
@@ -43,7 +45,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomHttpResponse> createProduct(@RequestBody Product product) {
+    public ResponseEntity<CustomHttpResponse> createProduct(@Valid @RequestBody Product product) {
         try{
             Product createdProduct = productService.createProduct(product);
             if (createdProduct == null){
@@ -59,6 +61,13 @@ public class ProductController {
                             .success(true)
                             .message(ResponseMessage.PRODUCT_CREATION_SUCCESS)
                             .data(createdProduct)
+                            .build()
+            );
+        } catch (ConstraintViolationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    CustomHttpResponse.builder()
+                            .success(false)
+                            .message(e.getConstraintViolations().iterator().next().getMessage())
                             .build()
             );
         } catch (Exception e){
