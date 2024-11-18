@@ -8,6 +8,10 @@ import com.imedia24.productWatcher.util.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class ProductService implements IProductService {
 
@@ -32,5 +36,15 @@ public class ProductService implements IProductService {
         return productRepository.findById(sku)
                 .map(productMapper::toProduct)
                 .orElse(null);
+    }
+
+    @Override
+    public List<Product> findProductsWithPricesFromLastThreeMonths() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -3);
+        Date threeMonthsAgo = calendar.getTime();
+        return this.productRepository.findProductsWithPricesFromLastThreeMonths(threeMonthsAgo).stream()
+                .map(productMapper::toProduct)
+                .toList();
     }
 }
