@@ -4,6 +4,7 @@ import com.imedia24.productWatcher.dao.model.CustomHttpResponse;
 import com.imedia24.productWatcher.dao.model.Price;
 import com.imedia24.productWatcher.service.interfaces.IPriceService;
 import com.imedia24.productWatcher.util.constant.ResponseMessage;
+import com.imedia24.productWatcher.util.exception.ProductDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,22 +45,29 @@ public class PriceController {
         try{
             Price createdPrice = priceService.createPrice(price);
             if(createdPrice == null){
-                return ResponseEntity.status(HttpStatus.OK).body(
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         CustomHttpResponse.builder()
                                 .success(false)
                                 .message(ResponseMessage.PRICE_CREATION_ERROR)
                                 .build()
                 );
             }
-            return ResponseEntity.status(HttpStatus.OK).body(
+            return ResponseEntity.status(HttpStatus.CREATED).body(
                     CustomHttpResponse.builder()
                             .success(true)
                             .message(ResponseMessage.PRICE_CREATION_SUCCESS)
                             .data(createdPrice)
                             .build()
             );
+        } catch (ProductDoesntExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    CustomHttpResponse.builder()
+                            .success(false)
+                            .message(e.getMessage())
+                            .build()
+            );
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.OK).body(
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     CustomHttpResponse.builder()
                             .success(false)
                             .message(e.getMessage())

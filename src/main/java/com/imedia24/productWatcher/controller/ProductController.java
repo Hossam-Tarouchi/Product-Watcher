@@ -49,7 +49,7 @@ public class ProductController {
         try{
             Product createdProduct = productService.createProduct(product);
             if (createdProduct == null){
-                return ResponseEntity.status(HttpStatus.OK).body(
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                         CustomHttpResponse.builder()
                                 .success(false)
                                 .message(ResponseMessage.PRODUCT_CREATION_ERROR)
@@ -71,7 +71,7 @@ public class ProductController {
                             .build()
             );
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.OK).body(
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     CustomHttpResponse.builder()
                             .success(false)
                             .message(e.getMessage())
