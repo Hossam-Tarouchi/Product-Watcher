@@ -3,7 +3,8 @@ package com.imedia24.productWatcher.job;
 import com.imedia24.productWatcher.dao.model.Price;
 import com.imedia24.productWatcher.dao.model.Product;
 import com.imedia24.productWatcher.dao.model.ProductAction;
-import com.imedia24.productWatcher.service.implementation.ProductService;
+import com.imedia24.productWatcher.service.interfaces.IProductService;
+import com.imedia24.productWatcher.service.interfaces.IRabbitMQService;
 import com.imedia24.productWatcher.util.enums.Action;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,20 +13,24 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
 public class ProductPriceAnalyzerJob {
 
-    private final ProductService productService;
+    private final IProductService productService;
     private final SimpleDateFormat simpleDateFormat;
+    private final IRabbitMQService rabbitMQService;
 
     @Autowired
-    public ProductPriceAnalyzerJob(ProductService productService, SimpleDateFormat simpleDateFormat) {
+    public ProductPriceAnalyzerJob(IProductService productService, SimpleDateFormat simpleDateFormat, IRabbitMQService rabbitMQService) {
         this.productService = productService;
         this.simpleDateFormat = simpleDateFormat;
+        this.rabbitMQService = rabbitMQService;
     }
 
+    //@Scheduled(fixedRate = 10_000)
     @Scheduled(cron = "0 0 0 * * 5", zone = "GMT")
     public void execute(){
 
@@ -59,8 +64,9 @@ public class ProductPriceAnalyzerJob {
                     actions.addAll(List.of(actionBuy, actionSell));
                 }
             }
-            // TODO: Publish to RabbitMQ
-            System.err.println(actions);
+            HashMap<String, List<ProductAction>> message = new HashMap<>();
+            message.put("actions", actions);
+            rabbitMQService.publish(message);
         }
     }
 }
