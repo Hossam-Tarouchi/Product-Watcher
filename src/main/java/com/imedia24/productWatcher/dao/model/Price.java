@@ -13,7 +13,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Price {
+public class Price implements Comparable<Price> {
 
     private Long id;
 
@@ -24,4 +24,9 @@ public class Price {
     private Date date;
 
     private Long sku;
+
+    @Override
+    public int compareTo(Price price) {
+        return this.date.compareTo(price.getDate());
+    }
 }
