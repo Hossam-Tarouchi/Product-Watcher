@@ -1,0 +1,23 @@
+stages:
+  - test
+  - build
+
+test:
+  image: openjdk:17
+  stage: test
+  script:
+    - ./gradlew test --no-daemon
+  only:
+    - main
+    - develop
+
+build:
+  image: openjdk:17
+  stage: build
+  script:
+    - ./gradlew clean build --no-daemon
+  dependencies:
+    - build
+  only:
+    - main
+    - develop
