@@ -42,6 +42,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    platform: linux/amd64
     image: my-spring-boot-app
     ports:
       - "8080:8080"
