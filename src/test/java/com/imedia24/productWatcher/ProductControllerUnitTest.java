@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,10 @@ public class ProductControllerUnitTest {
 
     private Product product;
 
+    Date currentDate = new Date();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    String formattedDate = dateFormat.format(currentDate);
+    
     @BeforeEach
     void setUp() {
         product = new Product();
@@ -44,7 +49,7 @@ public class ProductControllerUnitTest {
                 Price.builder()
                         .id(1L)
                         .sku(123L)
-                        .date(new Date())
+                        .date(currentDate)
                         .build()
         )));
     }
@@ -62,7 +67,7 @@ public class ProductControllerUnitTest {
                 .andExpect(jsonPath("$.data.name").value(product.getName()))
                 .andExpect(jsonPath("$.data.prices[0].id").value(1L))
                 .andExpect(jsonPath("$.data.prices[0].price").value(0.0))
-                .andExpect(jsonPath("$.data.prices[0].date").value("19/11/2024"))
+                .andExpect(jsonPath("$.data.prices[0].date").value(formattedDate))
                 .andExpect(jsonPath("$.data.prices[0].sku").value(123L));
     }
 
@@ -91,7 +96,7 @@ public class ProductControllerUnitTest {
                 .andExpect(jsonPath("$.data.name").value(product.getName()))
                 .andExpect(jsonPath("$.data.prices[0].id").value(1L))
                 .andExpect(jsonPath("$.data.prices[0].price").value(0.0))
-                .andExpect(jsonPath("$.data.prices[0].date").value("19/11/2024"))
+                .andExpect(jsonPath("$.data.prices[0].date").value(formattedDate))
                 .andExpect(jsonPath("$.data.prices[0].sku").value(123L));
     }
 
